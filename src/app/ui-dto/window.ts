@@ -1,13 +1,12 @@
 import { UIElement, Rect, Size } from './ui-element';
 import { TextBlock } from './text-block';
 
-export class UIWindow extends UIElement
-{
+export class UIWindow extends UIElement {
     private title: string;
-    get Title():string {
+    get Title(): string {
         return this.title;
     }
-    set Title(value:string) {
+    set Title(value: string) {
         this.title = value;
         this.update();
     }
@@ -15,23 +14,21 @@ export class UIWindow extends UIElement
     public TitleBar: TextBlock;
     public Content: UIElement = null;
 
-    constructor()
-    {
+    constructor() {
         super();
         this.setLeft(100);
         this.setTop(100);
         this.setWidth(200);
         this.setHeight(150);
         this.setBackground('#eeeeee');
-        this.setForeground("#111111");
-        this.Title = "Window";
+        this.setForeground('#111111');
+        this.Title = 'Window';
         this.TitleBar = new TextBlock();
         this.update();
     }
 
     public update() {
-        if (this.TitleBar)
-        {
+        if (this.TitleBar) {
             this.TitleBar.setFont('bold 14px serif');
             this.TitleBar.setLeft(0);
             this.TitleBar.setForeground(this.getBackground());
@@ -43,8 +40,7 @@ export class UIWindow extends UIElement
         }
     }
 
-    public draw(ctx: CanvasRenderingContext2D, parentArea: Rect): Size
-    {
+    public draw(ctx: CanvasRenderingContext2D, parentArea: Rect): Size {
         super.draw(ctx, parentArea);
         const titleBarPos: Rect = {
             x: this.parentArea.x + this.getLeft(),
@@ -59,8 +55,7 @@ export class UIWindow extends UIElement
             width: super.getWidth(),
             height: this.getHeight() - this.TitleBar.getHeight(),
         };
-        if (this.Content)
-        {
+        if (this.Content) {
             this.Content.draw(ctx, contentPos);
         }
         return { width: this.getWidth(), height: this.getHeight()};

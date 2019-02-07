@@ -1,26 +1,25 @@
 import { UIElement, Rect, Size } from './ui-element';
 import { isUndefined } from 'util';
 
-export class TextBlock extends UIElement
-{
+export class TextBlock extends UIElement {
     public text: string;
-    getText():string {
+    public font: string;
+
+    getText(): string {
         return this.text;
     }
-    setText(value:string) {
+    setText(value: string) {
         this.text = value;
     }
 
-    public font: string;
-    getFont():string {
+    getFont(): string {
         return this.font;
     }
-    setFont(value:string) {
+    setFont(value: string) {
         this.font = value;
     }
 
-    public draw( ctx: CanvasRenderingContext2D, parentArea: Rect): Size
-    {
+    public draw( ctx: CanvasRenderingContext2D, parentArea: Rect): Size {
         super.draw(ctx, parentArea);
         ctx.save();
         this.contextRef = ctx;
@@ -39,22 +38,20 @@ export class TextBlock extends UIElement
         }
         let h = this.getHeight();
         if (!h) {
-            h = parseInt(ctx.font) * 1.2;
+            h = parseInt(ctx.font, null) * 1.2;
         }
 
         let x = this.getLeft();
         if (isUndefined(x)) {
             x = 0;
-        }
-        else { // todo better padding
+        } else { // todo better padding
             x += 3;
         }
 
         let y = this.getTop();
         if (isUndefined(y)) {
             y = 0;
-        }
-        else { // todo better padding
+        } else { // todo better padding
             y -= 3;
         }
 

@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { UIWindow } from '../ui-dto/window';
-import { UIElement } from '../ui-dto/ui-element';
+import { UIWindow } from '../../ui-dto/window';
+import { UIElement } from '../../ui-dto/ui-element';
 import * as _ from 'lodash';
-import { StackPanel } from '../ui-dto/stack-panel';
-import { TextBlock } from '../ui-dto/text-block';
+import { StackPanel } from '../../ui-dto/stack-panel';
+import { TextBlock } from '../../ui-dto/text-block';
 
 @Component({
   selector: 'app-canvas-ui',
@@ -30,14 +30,13 @@ export class CanvasUIComponent implements OnInit {
     this.canvas.nativeElement.addEventListener('click', this.onClick.bind(this));
   }
 
-  onClick(event:MouseEvent)
-  {
+  onClick(event: MouseEvent) {
+    console.log(event.offsetX + ' / ' + event.offsetY);
     const maxZElm = _.maxBy(this.ui_elements, function(o) { return o.getZIndex(); });
     const maxZ = maxZElm ? maxZElm.getZIndex() : 0;
     for (let index = 0; index < this.ui_elements.length; index++) {
       const element = this.ui_elements[index];
-      if (element.HitTest(event.x, event.y))
-      {
+      if (element.HitTest(event.offsetX, event.offsetY)) {
         element.setZIndex(maxZ + 1);
       }
     }
@@ -45,21 +44,22 @@ export class CanvasUIComponent implements OnInit {
 
   generateRandomWindows(): any {
     for (let index = 0; index < 2; index++) {
-      let wnd = new UIWindow();
+      const wnd = new UIWindow();
       wnd.setLeft(50 + index * 10 * 10);
       wnd.setTop(50 + index * 10 * 10);
-      wnd.Title = "Window " + index;
-      let sp = new StackPanel();
-      sp.setOrientation(index / 2 == 0 ? "vertical" : "horizontal")
+      wnd.Title = 'Window ' + index;
+      const sp = new StackPanel();
+      sp.setOrientation(index / 2 === 0 ? 'vertical' : 'horizontal');
       for (let index2 = 0; index2 < 20; index2++) {
-        let tb = new TextBlock();
-        let tb2 = new TextBlock();
-        tb.setText(index + index / 2 == 0 ? " TextBlock in vertical Stackpanel" : " hor stack ");
-        tb2.setText(index + index / 2 == 0 ? " TestLong TestLong TestLong TestLong TestLong TestLong TestLong TestLong TestLong TestLong TestLong TestLong TestLong " : "hor");
-        tb.setForeground("#ff0000");
-        tb2.setForeground("#000ff0");
+        const tb = new TextBlock();
+        const tb2 = new TextBlock();
+        tb.setText(index + index / 2 === 0 ? ' TextBlock in vertical Stackpanel' : ' hor stack ');
+        tb2.setText(index + index / 2 === 0 ? `TestLong TestLong TestLong TestLong TestLong
+         TestLong TestLong TestLong TestLong TestLong TestLong TestLong TestLong ` : 'hor');
+        tb.setForeground('#ff0000');
+        tb2.setForeground('#000ff0');
         sp.addChild(tb);
-        sp.addChild(tb2); 
+        sp.addChild(tb2);
       }
       wnd.Content = sp;
       this.ui_elements.push(wnd);
@@ -67,28 +67,26 @@ export class CanvasUIComponent implements OnInit {
   }
 
   loop(timestamp: number) {
-    console.log("Redrawing canvas at timespamp: " + timestamp);
+    console.log('Redrawing canvas at timespamp: ' + timestamp);
     this.update(timestamp);
     this.redraw(timestamp);
   }
 
-  update(timestamp:number)
-  {
+  update(timestamp: number) {
     this.ui_elements.forEach(el => {
       el.update();
     });
   }
 
-  redraw(timestamp:number)
-  {
-    if (!this.context) return;
+  redraw(timestamp: number) {
+    if (!this.context) { return; }
 
     this.initCanvasProperties();
 
-    let ctx = this.context;
+    const ctx = this.context;
 
     this.clearCanvas(ctx);
-    
+
     this.drawChildren(ctx);
 
   }

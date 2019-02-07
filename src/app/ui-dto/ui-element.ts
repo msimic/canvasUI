@@ -1,6 +1,6 @@
 import { HitTestable } from './hit-testable';
 
-export class Size{
+export class Size {
     width: number;
     height: number;
 }
@@ -11,39 +11,37 @@ export class Rect {
     width: number;
     height: number;
 }
-export class UIElement extends HitTestable
-{
+export class UIElement extends HitTestable {
     private background: string;
-    getBackground():string {
-        return this.background;
-    }
-    setBackground(value:string) {
-        this.background = value;
-    }
 
     private foreground: string;
-    getForeground():string {
-        return this.foreground;
-    }
-    setForeground(value:string) {
-        this.foreground = value;
-    }
 
     protected contextRef: CanvasRenderingContext2D;
     protected parentArea: Rect;
+    getBackground(): string {
+        return this.background;
+    }
+    setBackground(value: string) {
+        this.background = value;
+    }
+    getForeground(): string {
+        return this.foreground;
+    }
+    setForeground(value: string) {
+        this.foreground = value;
+    }
 
     public update() {
 
     }
 
-    public draw(ctx: CanvasRenderingContext2D, parentArea: Rect): Size
-    {
+    public draw(ctx: CanvasRenderingContext2D, parentArea: Rect): Size {
         ctx.save();
         this.contextRef = ctx;
         this.parentArea = parentArea;
         ctx.rect(parentArea.x, parentArea.y, parentArea.width, parentArea.height);
         ctx.clip();
-        let el = this;
+        const el = this;
         ctx.translate(parentArea.x, parentArea.y);
         ctx.beginPath();
         ctx.rect(el.getLeft(), el.getTop(), el.getWidth(), el.getHeight());
@@ -57,15 +55,13 @@ export class UIElement extends HitTestable
         return { width: el.getWidth(), height: el.getHeight()};
     }
 
-    protected onPositionChanged()
-    {
+    protected onPositionChanged() {
         this.update();
-        if (this.contextRef) this.draw(this.contextRef, this.parentArea);
+        if (this.contextRef) { this.draw(this.contextRef, this.parentArea); }
     }
 
-    protected onSizeChanged()
-    {
+    protected onSizeChanged() {
         this.update();
-        if (this.contextRef) this.draw(this.contextRef, this.parentArea );
+        if (this.contextRef) { this.draw(this.contextRef, this.parentArea ); }
     }
 }

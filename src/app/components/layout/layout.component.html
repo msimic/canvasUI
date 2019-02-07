@@ -1,0 +1,61 @@
+<ng-template #canvasTemplate let-row let-rowIndex="rowIndex" let-columnIndex="columnIndex">
+        <app-canvas-ui></app-canvas-ui>
+</ng-template>  
+
+<ng-template #devTemplate let-row let-rowIndex="rowIndex" let-columnIndex="columnIndex">
+    <div class="devtools">
+        <p>Layout Dev tools</p>
+        <p>All areas size and visibility are saved to localStorage.<br>
+        Toggle areas visibility using following buttons:</p>
+        <ng-template ngFor let-c [ngForOf]="config.columns">
+            <ng-template ngFor let-r [ngForOf]="c.rows">
+                <button *ngIf="r.type !== 'doc'"
+                        (click)="r.visible = !r.visible; refreshColumnVisibility()" 
+                        [class.active]="!r.visible"
+                        class="btn btn-warning">{{ r.type }}</button>
+            </ng-template>
+        </ng-template>
+        <br>
+        <button class="btn btn-warning" [class.active]="!config.disabled" (click)="toggleDisabled()">{{ 'isDisabled: ' + config.disabled }}</button>
+        <br>
+        <button (click)="resetConfig()" class="btn btn-warning">Reset localStorage</button>
+    </div>
+</ng-template>  
+
+<ng-template #defaultTemplate let-row let-rowIndex="rowIndex" let-columnIndex="columnIndex">
+        <p>Component {{row.type}} not found, using placeholder template!</p>
+        <p>Panel columnIndex: {{columnIndex}}</p>
+        <p>Panel rowIndex: {{rowIndex}}</p>
+</ng-template> 
+
+<as-split *ngIf="loaded" (gutterClick)="gutterColClick($event)" [useTransition]="true"
+               direction="horizontal"
+               [disabled]="config.disabled"
+               (dragEnd)="onDragEnd(-1, $event)">
+            <ng-template ngFor let-column [ngForOf]="config.columns" let-icol="index">
+                <as-split-area *ngIf="column.visible"
+                            [order]="icol" 
+                            [size]="column.size">
+                    <as-split direction="vertical" (gutterClick)="gutterRowClick(icol, $event)"  [useTransition]="true"
+                           [disabled]="config.disabled"
+                           (dragEnd)="onDragEnd(icol, $event)">
+                        <ng-template ngFor let-row [ngForOf]="column.rows" let-irow="index">
+                            <as-split-area *ngIf="row.visible"
+                                        [order]="irow"
+                                        [size]="row.size">
+                                <div class="split-buttons">
+                                    <div class="move moveright" (click)="moveRight(icol, irow)"></div>
+                                    <div class="move movedown" (click)="moveDown(icol, irow)"></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div class="panel">
+                                    <ng-template [ngTemplateOutlet]="getTemplate(row, column)" 
+                                        [ngTemplateOutletContext]="{ $implicit: row, columnIndex: icol, rowIndex: irow }">
+                                    </ng-template>
+                                </div>
+                            </as-split-area>
+                        </ng-template>
+                    </as-split>
+                </as-split-area>
+            </ng-template>
+        </as-split> 

@@ -1,63 +1,59 @@
-export class HitTestable
-{
+export class HitTestable {
     private left: number;
     private top: number;
     private width: number;
     private height: number;
     private zIndex: number;
 
-    getZIndex():number {
+    getZIndex(): number {
         return this.zIndex;
     }
-    setZIndex(value:number) {
+    setZIndex(value: number) {
         this.zIndex = value;
         this.onSizeChanged();
     }
 
-    getWidth():number {
+    getWidth(): number {
         return this.width;
     }
-    setWidth(value:number) {
+    setWidth(value: number) {
         this.width = value;
         this.onSizeChanged();
     }
 
-    getHeight():number {
+    getHeight(): number {
         return this.height;
     }
-    setHeight(value:number) {
+    setHeight(value: number) {
         this.height = value;
         this.onSizeChanged();
     }
 
-    getLeft():number {
+    getLeft(): number {
         return this.left;
     }
-    setLeft(value:number) {
+    setLeft(value: number) {
         this.left = value;
         this.onPositionChanged();
     }
 
-    getTop():number {
+    getTop(): number {
         return this.top;
     }
-    setTop(value:number) {
+    setTop(value: number) {
         this.top = value;
         this.onPositionChanged();
     }
 
-    protected onPositionChanged()
-    {
+    protected onPositionChanged() {
 
     }
 
-    protected onSizeChanged()
-    {
+    protected onSizeChanged() {
 
     }
 
-    public HitTest(x: number, y: number): boolean
-    {
+    public HitTest(x: number, y: number): boolean {
         return x >= this.getLeft() && x <= this.getLeft() + this.getWidth() && y >= this.getTop() && y <= this.getTop() + this.getHeight();
     }
 }

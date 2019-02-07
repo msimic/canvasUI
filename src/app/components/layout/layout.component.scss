@@ -1,0 +1,40 @@
+.cell {
+    
+}
+
+.devtools {
+    background-color: green;
+}
+
+.panel {
+    
+}
+
+.move {
+    height: 10px;
+    width: 10px;
+    float: right;
+    position: relative;
+}
+
+.movedown {
+    background-color: red;
+}
+
+.moveright {
+    background-color: green;
+}
+
+.split-buttons {
+    border: 1px solid black;
+    width: 100%;
+    background-color: gray;
+}
+
+as-split.is-transition.is-init:not(.is-dragging) ::ng-deep > .as-split-gutter,
+as-split.is-transition.is-init:not(.is-dragging) > .as-split-area {
+    transition: flex-basis 0.5s !important;
+}
+as-split.is-disabled ::ng-deep > .as-split-gutter {
+    cursor: pointer !important;
+}

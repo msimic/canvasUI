@@ -2,33 +2,29 @@ import { UIElement, Rect, Size } from './ui-element';
 import { Content } from '@angular/compiler/src/render3/r3_ast';
 import * as _ from 'lodash';
 
-export class StackPanel extends UIElement
-{
+export class StackPanel extends UIElement {
     public Content: UIElement[] = [];
 
-    private orientation: string = 'vertical';
-    getOrientation():string {
+    private orientation = 'vertical';
+    getOrientation(): string {
         return this.orientation;
     }
-    setOrientation(value:string) {
+    setOrientation(value: string) {
         this.orientation = value;
     }
 
-    public addChild(el: UIElement)
-    {
+    public addChild(el: UIElement) {
         this.Content.push(el);
         this.update();
     }
 
-    public removeChild(el: UIElement)
-    {
-        const removeIndex = _.findIndex(this.Content, (e) => e == el);
+    public removeChild(el: UIElement) {
+        const removeIndex = _.findIndex(this.Content, (e) => e === el);
         this.Content.splice(removeIndex, 1);
         this.update();
     }
 
-    public draw(ctx: CanvasRenderingContext2D, parentArea: Rect): Size
-    {
+    public draw(ctx: CanvasRenderingContext2D, parentArea: Rect): Size {
         this.contextRef = ctx;
         this.parentArea = parentArea;
 
@@ -45,20 +41,16 @@ export class StackPanel extends UIElement
             };
             const elSize = element.draw(ctx, elementPos);
 
-            if (this.orientation == "vertical")
-            {
+            if (this.orientation === 'vertical') {
                 posY += elSize.height;
 
-                if (posY + elSize.height > parentArea.height)
-                {
+                if (posY + elSize.height > parentArea.height) {
                     break;
                 }
-            }
-            else{
+            } else {
                 posX += elSize.width;
 
-                if (posX + elSize.width > parentArea.width)
-                {
+                if (posX + elSize.width > parentArea.width) {
                     break;
                 }
             }
