@@ -1,13 +1,13 @@
-.cell {
-    
-}
-
 .devtools {
     background-color: green;
 }
 
-.panel {
-    
+.active {
+    border: 2px solid blue;
+}
+
+.inactive {
+    border: 1px dashed gray;
 }
 
 .move {

@@ -22,15 +22,15 @@ export const defaultConfig: IConfig = {
             visible: true,
             size: 25,
             rows: [
-                { visible: true, size: 25, type: 'canvasTemplate' },
-                { visible: true, size: 75, type: 'B' }
+                { visible: true, size: 25, type: 'PUŠIK' },
+                { visible: true, size: 75, type: 'devTemplate' }
             ]
         },
         {
             visible: true,
             size: 50,
             rows: [
-                { visible: true, size: 60, type: 'devTemplate' },
+                { visible: true, size: 60, type: 'canvasTemplate' },
                 { visible: true, size: 40, type: 'C' }
             ]
         },

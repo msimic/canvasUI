@@ -7,7 +7,7 @@ import { IConfig, defaultConfig, IRow, IColumn } from '../../dto/IConfig';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
-export class LayoutComponent implements OnInit, AfterContentInit, OnInit {
+export class LayoutComponent implements OnInit, AfterContentInit {
 
   localStorageName = 'layout';
   config: IConfig = null;
@@ -19,11 +19,13 @@ export class LayoutComponent implements OnInit, AfterContentInit, OnInit {
   @ViewChild('defaultTemplate') defaultTemplate: TemplateRef<any>;
 
   public loaded = false;
+  defaultConfig: IConfig;
 
   constructor() { }
 
   ngOnInit() {
     if (localStorage.getItem(this.localStorageName)) {
+        this.defaultConfig = cloneDeep(defaultConfig);
         this.config = JSON.parse(localStorage.getItem(this.localStorageName));
     } else {
         this.resetConfig();
@@ -36,7 +38,7 @@ export class LayoutComponent implements OnInit, AfterContentInit, OnInit {
 
   resetConfig() {
     this.config = cloneDeep(defaultConfig);
-
+    this.defaultConfig = cloneDeep(defaultConfig);
     localStorage.removeItem(this.localStorageName);
   }
 
@@ -88,6 +90,8 @@ export class LayoutComponent implements OnInit, AfterContentInit, OnInit {
       const curType = row.type;
       row.type = nextRow.type;
       nextRow.type = curType;
+
+      this.saveLocalStorage();
     }
   }
 
@@ -100,6 +104,8 @@ export class LayoutComponent implements OnInit, AfterContentInit, OnInit {
       const curType = row.type;
       row.type = nextRow.type;
       nextRow.type = curType;
+
+      this.saveLocalStorage();
     }
   }
 
@@ -122,8 +128,40 @@ export class LayoutComponent implements OnInit, AfterContentInit, OnInit {
             element.size = normalSize;
           }
       }
+
+      this.saveLocalStorage();
     }
   }
+
+  getDefaultColumnSize(colNum: number): number {
+    return this.defaultConfig.columns[colNum].size;
+  }
+
+  addMissingSizeToColumn(col: number): number {
+    const sum = this.config.columns.reduce((pv, cv, ci, cols) => {
+      if (ci <= col && cv.visible) {
+        pv.size += cv.size;
+      }
+      return pv;
+    }, {
+      visible: true,
+      size: 0,
+      rows: null
+    });
+
+    return this.config.columns[col].size += 100 - sum.size;
+  }
+  anyVisibleColumnAfter(col: number): boolean {
+    return this.config.columns.filter((c, i) => {
+      if (i > col) {
+        if (c.visible) {
+          return true;
+        }
+      }
+      return false;
+    }).length > 0;
+  }
+
   gutterColClick(e: {gutterNum: number, sizes: Array<number>}) {
 
     if (this.config.disabled) { return; }
@@ -133,15 +171,22 @@ export class LayoutComponent implements OnInit, AfterContentInit, OnInit {
       if (this.config.columns[0].size > 0) {
           this.config.columns[1].size += this.config.columns[0].size;
           this.config.columns[0].size = 0;
-      } else if (this.config.columns[1].size > 25) {
-          this.config.columns[1].size -= 25;
-          this.config.columns[0].size = 25;
+          if (!this.anyVisibleColumnAfter(1)) {
+            this.addMissingSizeToColumn(1);
+          }
+      } else if (this.config.columns[1].size > this.getDefaultColumnSize(1)) {
+          this.config.columns[1].size -= this.getDefaultColumnSize(0);
+          this.config.columns[0].size = this.getDefaultColumnSize(0);
+          if (!this.anyVisibleColumnAfter(1)) {
+            this.addMissingSizeToColumn(1);
+          }
       } else {
         for (let index = 0; index < this.config.columns.length; index++) {
           const element = this.config.columns[index];
           element.size = normalSize;
         }
       }
+      this.saveLocalStorage();
       return;
     }
 
@@ -149,15 +194,16 @@ export class LayoutComponent implements OnInit, AfterContentInit, OnInit {
       if (this.config.columns[this.config.columns.length - 1].size > 0) {
           this.config.columns[this.config.columns.length - 2].size += this.config.columns[this.config.columns.length - 1].size;
           this.config.columns[this.config.columns.length - 1].size = 0;
-      } else if (this.config.columns[this.config.columns.length - 2].size > 25) {
-          this.config.columns[this.config.columns.length - 2].size -= 25;
-          this.config.columns[this.config.columns.length - 1].size = 25;
+      } else if (this.config.columns[this.config.columns.length - 2].size > this.getDefaultColumnSize(this.config.columns.length - 2)) {
+          this.config.columns[this.config.columns.length - 2].size -= this.getDefaultColumnSize(this.config.columns.length - 1);
+          this.config.columns[this.config.columns.length - 1].size = this.getDefaultColumnSize(this.config.columns.length - 1);
       } else {
         for (let index = 0; index < this.config.columns.length; index++) {
           const element = this.config.columns[index];
           element.size = normalSize;
         }
       }
+      this.saveLocalStorage();
       return;
     }
   }
