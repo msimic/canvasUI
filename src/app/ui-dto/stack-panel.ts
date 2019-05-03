@@ -1,6 +1,4 @@
 import { UIElement, Rect, Size } from './ui-element';
-import { Content } from '@angular/compiler/src/render3/r3_ast';
-import * as _ from 'lodash';
 
 export class StackPanel extends UIElement {
     public Content: UIElement[] = [];
@@ -19,7 +17,7 @@ export class StackPanel extends UIElement {
     }
 
     public removeChild(el: UIElement) {
-        const removeIndex = _.findIndex(this.Content, (e) => e === el);
+        const removeIndex = this.Content.findIndex((e) => e === el);
         this.Content.splice(removeIndex, 1);
         this.update();
     }

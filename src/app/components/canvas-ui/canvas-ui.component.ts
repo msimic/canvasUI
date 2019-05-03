@@ -47,6 +47,10 @@ export class CanvasUIComponent implements OnInit {
       const wnd = new UIWindow();
       wnd.setLeft(50 + index * 10 * 10);
       wnd.setTop(50 + index * 10 * 10);
+      const width = 100 + (Math.floor(Math.random() * 10) + 1) * 30;
+      const height = 100 + (Math.floor(Math.random() * 10) + 1) * 30;
+      wnd.setHeight(height);
+      wnd.setWidth(width);
       wnd.Title = 'Window ' + index;
       const sp = new StackPanel();
       sp.setOrientation(index / 2 === 0 ? 'vertical' : 'horizontal');
